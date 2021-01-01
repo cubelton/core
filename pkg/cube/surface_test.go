@@ -166,7 +166,7 @@ func TestCustomSurfaceHex(t *testing.T) {
 	}
 }
 
-func TestCustomSurfaceRotate(t *testing.T) {
+func TestRotate(t *testing.T) {
 	vectors := []struct {
 		cells       [9]*Cell
 		binaryValue string
@@ -244,5 +244,287 @@ func TestCustomSurfaceRotate(t *testing.T) {
 		} else {
 			t.Log("hex value is " + hex)
 		}
+	}
+}
+
+func TestRotateBack(t *testing.T) {
+	vectors := []struct {
+		cells       [9]*Cell
+		binaryValue string
+		hexValue    string
+	}{
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000000000000000000000110",
+			"00000006",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+				NewCell(ORANGE), NewCell(GREEN), NewCell(ORANGE),
+				NewCell(GREEN), NewCell(ORANGE), NewCell(COLORLESS),
+			},
+			"000101000101000101000101110",
+			"00a28a2e",
+		},
+		{
+			[9]*Cell{
+				NewCell(ORANGE), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000000000000000101000110",
+			"00000146",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000000000000000000101110",
+			"0000002e",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(ORANGE), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000000000101000000000110",
+			"00005006",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(ORANGE), NewCell(COLORLESS),
+			},
+			"000000000000000101000000110",
+			"00000a06",
+		},
+	}
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		surface.RotateBack()
+		bits := surface.Bits()
+
+		if bits != vector.binaryValue {
+			t.Error("Surface binary value should be "+vector.binaryValue+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+		hex := surface.Hex()
+		if hex != vector.hexValue {
+			t.Error("Surface hex value should be "+vector.hexValue+", but ", hex)
+		} else {
+			t.Log("hex value is " + hex)
+		}
+	}
+}
+
+func TestDoubleRotate(t *testing.T) {
+	vectors := []struct {
+		cells       [9]*Cell
+		binaryValue string
+		hexValue    string
+	}{
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000000000000000000000110",
+			"00000006",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+				NewCell(ORANGE), NewCell(GREEN), NewCell(ORANGE),
+				NewCell(GREEN), NewCell(ORANGE), NewCell(COLORLESS),
+			},
+			"000101000101000101000101110",
+			"00a28a2e",
+		},
+		{
+			[9]*Cell{
+				NewCell(ORANGE), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000000000101000000000110",
+			"00005006",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000000000000101000000110",
+			"00000a06",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(ORANGE), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000101000000000000000110",
+			"00140006",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(ORANGE), NewCell(COLORLESS),
+			},
+			"000000000101000000000000110",
+			"00028006",
+		},
+	}
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		surface.DoubleRotate()
+		bits := surface.Bits()
+
+		if bits != vector.binaryValue {
+			t.Error("Surface binary value should be "+vector.binaryValue+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+		hex := surface.Hex()
+		if hex != vector.hexValue {
+			t.Error("Surface hex value should be "+vector.hexValue+", but ", hex)
+		} else {
+			t.Log("hex value is " + hex)
+		}
+	}
+}
+
+func TestRotateBackLoop(t *testing.T) {
+	vectors := getLoopVectors()
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		initialBits := surface.Bits()
+		t.Log("Rotate 4 times")
+		for i := 0; i < 4; i++ {
+			surface.Rotate()
+		}
+		bits := surface.Bits()
+		if bits != initialBits {
+			t.Error("Surface binary value should be "+initialBits+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+	}
+}
+
+func TestRotateLoop(t *testing.T) {
+	vectors := getLoopVectors()
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		initialBits := surface.Bits()
+		t.Log("Rotate Back 4 times")
+		for i := 0; i < 4; i++ {
+			surface.RotateBack()
+		}
+		bits := surface.Bits()
+		if bits != initialBits {
+			t.Error("Surface binary value should be "+initialBits+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+	}
+}
+
+func TestLoop(t *testing.T) {
+	vectors := getLoopVectors()
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		initialBits := surface.Bits()
+		t.Log("Double Rotate 2 times")
+		for i := 0; i < 2; i++ {
+			surface.DoubleRotate()
+		}
+		bits := surface.Bits()
+		if bits != initialBits {
+			t.Error("Surface binary value should be "+initialBits+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+	}
+}
+
+func TestDoubleRotateLoop(t *testing.T) {
+	vectors := getLoopVectors()
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		initialBits := surface.Bits()
+		t.Log("Double Rotate 2 times")
+		surface.Rotate()
+		surface.DoubleRotate()
+		surface.Rotate()
+		surface.DoubleRotate()
+		surface.RotateBack()
+		surface.RotateBack()
+		bits := surface.Bits()
+		if bits != initialBits {
+			t.Error("Surface binary value should be "+initialBits+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+	}
+}
+
+func getLoopVectors() []struct{ cells [9]*Cell } {
+	return []struct {
+		cells [9]*Cell
+	}{
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+			},
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(RED), NewCell(GREEN),
+				NewCell(RED), NewCell(GREEN), NewCell(RED),
+				NewCell(GREEN), NewCell(RED), NewCell(GREEN),
+			},
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+				NewCell(ORANGE), NewCell(GREEN), NewCell(ORANGE),
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+			}},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(YELLOW), NewCell(RED),
+				NewCell(BLUE), NewCell(WHITE), NewCell(ORANGE),
+				NewCell(COLORLESS), NewCell(GREEN), NewCell(GREEN),
+			},
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(RED), NewCell(WHITE),
+				NewCell(GREEN), NewCell(RED), NewCell(WHITE),
+				NewCell(GREEN), NewCell(RED), NewCell(WHITE),
+			},
+		},
 	}
 }

@@ -48,3 +48,35 @@ func (s *Surface) Rotate() {
 	s.cells[SouthWest] = s.cells[SouthEast]
 	s.cells[SouthEast] = northEastCell
 }
+
+func (s *Surface) RotateBack() {
+	//rotate main
+	northCell := s.cells[North]
+	s.cells[North] = s.cells[East]
+	s.cells[East] = s.cells[South]
+	s.cells[South] = s.cells[West]
+	s.cells[West] = northCell
+	//rotate angels
+	northEastCell := s.cells[NorthEast]
+	s.cells[NorthEast] = s.cells[SouthEast]
+	s.cells[SouthEast] = s.cells[SouthWest]
+	s.cells[SouthWest] = s.cells[NorthWest]
+	s.cells[NorthWest] = northEastCell
+}
+
+func (s *Surface) DoubleRotate() {
+	//rotate main
+	northCell := s.cells[North]
+	s.cells[North] = s.cells[South]
+	s.cells[South] = northCell
+	eastCell := s.cells[East]
+	s.cells[East] = s.cells[West]
+	s.cells[West] = eastCell
+	//rotate angels
+	northEastCell := s.cells[NorthEast]
+	s.cells[NorthEast] = s.cells[SouthWest]
+	s.cells[SouthWest] = northEastCell
+	southEastCell := s.cells[SouthEast]
+	s.cells[SouthEast] = s.cells[NorthWest]
+	s.cells[NorthWest] = southEastCell
+}
