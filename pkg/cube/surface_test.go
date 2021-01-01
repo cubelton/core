@@ -408,3 +408,123 @@ func TestDoubleRotate(t *testing.T) {
 		}
 	}
 }
+
+func TestRotateBackLoop(t *testing.T) {
+	vectors := getLoopVectors()
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		initialBits := surface.Bits()
+		t.Log("Rotate 4 times")
+		for i := 0; i < 4; i++ {
+			surface.Rotate()
+		}
+		bits := surface.Bits()
+		if bits != initialBits {
+			t.Error("Surface binary value should be "+initialBits+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+	}
+}
+
+func TestRotateLoop(t *testing.T) {
+	vectors := getLoopVectors()
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		initialBits := surface.Bits()
+		t.Log("Rotate Back 4 times")
+		for i := 0; i < 4; i++ {
+			surface.RotateBack()
+		}
+		bits := surface.Bits()
+		if bits != initialBits {
+			t.Error("Surface binary value should be "+initialBits+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+	}
+}
+
+func TestLoop(t *testing.T) {
+	vectors := getLoopVectors()
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		initialBits := surface.Bits()
+		t.Log("Double Rotate 2 times")
+		for i := 0; i < 2; i++ {
+			surface.DoubleRotate()
+		}
+		bits := surface.Bits()
+		if bits != initialBits {
+			t.Error("Surface binary value should be "+initialBits+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+	}
+}
+
+func TestDoubleRotateLoop(t *testing.T) {
+	vectors := getLoopVectors()
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		initialBits := surface.Bits()
+		t.Log("Double Rotate 2 times")
+		surface.Rotate()
+		surface.DoubleRotate()
+		surface.Rotate()
+		surface.DoubleRotate()
+		surface.RotateBack()
+		surface.RotateBack()
+		bits := surface.Bits()
+		if bits != initialBits {
+			t.Error("Surface binary value should be "+initialBits+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+	}
+}
+
+func getLoopVectors() []struct{ cells [9]*Cell } {
+	return []struct {
+		cells [9]*Cell
+	}{
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+			},
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(RED), NewCell(GREEN),
+				NewCell(RED), NewCell(GREEN), NewCell(RED),
+				NewCell(GREEN), NewCell(RED), NewCell(GREEN),
+			},
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+				NewCell(ORANGE), NewCell(GREEN), NewCell(ORANGE),
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+			}},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(YELLOW), NewCell(RED),
+				NewCell(BLUE), NewCell(WHITE), NewCell(ORANGE),
+				NewCell(COLORLESS), NewCell(GREEN), NewCell(GREEN),
+			},
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(RED), NewCell(WHITE),
+				NewCell(GREEN), NewCell(RED), NewCell(WHITE),
+				NewCell(GREEN), NewCell(RED), NewCell(WHITE),
+			},
+		},
+	}
+}
