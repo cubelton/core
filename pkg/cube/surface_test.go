@@ -327,3 +327,84 @@ func TestRotateBack(t *testing.T) {
 		}
 	}
 }
+
+func TestDoubleRotate(t *testing.T) {
+	vectors := []struct {
+		cells       [9]*Cell
+		binaryValue string
+		hexValue    string
+	}{
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000000000000000000000110",
+			"00000006",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+				NewCell(ORANGE), NewCell(GREEN), NewCell(ORANGE),
+				NewCell(GREEN), NewCell(ORANGE), NewCell(COLORLESS),
+			},
+			"000101000101000101000101110",
+			"00a28a2e",
+		},
+		{
+			[9]*Cell{
+				NewCell(ORANGE), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000000000101000000000110",
+			"00005006",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(ORANGE), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000000000000101000000110",
+			"00000a06",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(ORANGE), NewCell(GREEN), NewCell(COLORLESS),
+			},
+			"000000101000000000000000110",
+			"00140006",
+		},
+		{
+			[9]*Cell{
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(GREEN), NewCell(GREEN),
+				NewCell(GREEN), NewCell(ORANGE), NewCell(COLORLESS),
+			},
+			"000000000101000000000000110",
+			"00028006",
+		},
+	}
+	for _, vector := range vectors {
+		surface := new(Surface)
+		surface.cells = vector.cells
+		surface.DoubleRotate()
+		bits := surface.Bits()
+
+		if bits != vector.binaryValue {
+			t.Error("Surface binary value should be "+vector.binaryValue+", but ", bits)
+		} else {
+			t.Log("binary value is " + bits)
+		}
+		hex := surface.Hex()
+		if hex != vector.hexValue {
+			t.Error("Surface hex value should be "+vector.hexValue+", but ", hex)
+		} else {
+			t.Log("hex value is " + hex)
+		}
+	}
+}
